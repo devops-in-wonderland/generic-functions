@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aws-cost-slack-cronjob
+spec:
+  schedule: "5 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: generic-functions-aws-cost-slack
+            image: ghcr.io/devops-in-wonderland/generic-functions:43f77995f231931e9acac80c1f37975e7cd9220c
+            imagePullPolicy: IfNotPresent
+            command:
+            - python3
+            - -c
+            - |
+              from slack import functions
+              from os import getenv
+              functions.aws_cost_report_yesterday(
+                getenv('SLACK_TOKEN'),
+                getenv('SLACK_CHANNEL_ID'),
+                getenv('SLACK_FAULT_CONTACT')
+              )
+            env:
+            - name: SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cost-slack-secret
+                  key: SLACK_TOKEN
+            - name: SLACK_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cost-slack-secret
+                  key: SLACK_CHANNEL_ID
+            - name: SLACK_FAULT_CONTACT
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cost-slack-secret
+                  key: SLACK_FAULT_CONTACT
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cost-slack-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cost-slack-secret
+                  key: AWS_SECRET_ACCESS_KEY
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: regcred
