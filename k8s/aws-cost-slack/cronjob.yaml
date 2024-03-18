@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: aws-cost-slack-cronjob
 spec:
-  schedule: "5 0 * * *"
+  schedule: "0 4 * * *"
   jobTemplate:
     spec:
       template:
