@@ -2,11 +2,9 @@ from datetime import datetime, timedelta
 import requests
 import json
 import boto3
-import dotenv
-import os
 import pandas as pd
 
-
+import dotenv
 dotenv.load_dotenv(override=True)
 
 
@@ -81,9 +79,6 @@ def aws_cost_report_yesterday(token: str, channel_id: str, fault_contact: str):
                      f"<@{fault_contact} aws_cost_report could not get response properly!>")
 
     results = response['ResultsByTime'][0]
-
-    with open("jotter.response.json", "w", encoding="utf-8") as f:
-        json.dump(results, f)
 
     total_cost = 0
     for group in results['Groups']:
