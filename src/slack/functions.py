@@ -39,15 +39,16 @@ def send_message(token: str, channel_id: str, text: str) -> requests.Response:
     return response
 
 
-def aws_cost_report_yesterday(token: str, channel_id: str, fault_contact: str):
+def aws_cost_report(token: str, channel_id: str, fault_contact: str):
     client = boto3.client('ce')
 
     current_date = datetime.now()
-    yesterday_date = current_date - timedelta(days=1)
+    start_date = current_date - timedelta(days=2)
+    end_date = current_date - timedelta(days=1)
 
     date_format = "%Y-%m-%d"
-    today_text = current_date.strftime(date_format)
-    yesterday_text = yesterday_date.strftime(date_format)
+    today_text = end_date.strftime(date_format)
+    yesterday_text = start_date.strftime(date_format)
 
     response: dict = client.get_cost_and_usage(
         TimePeriod={
