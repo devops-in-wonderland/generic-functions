@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: generic-functions-aws-cost-slack
-            image: ghcr.io/devops-in-wonderland/generic-functions:43f77995f231931e9acac80c1f37975e7cd9220c
+            image: ghcr.io/devops-in-wonderland/generic-functions:6c3287a950dc7d5064d77bf59333b19bf9234b18
             imagePullPolicy: IfNotPresent
             command:
             - python3
